@@ -1,0 +1,22 @@
+[package]
+name = "git-work"
+description = "A git-subcommand to create branches following conventional-commits names"
+license = "Apache-2.0 OR MIT"
+repository = "https://github.com/mainrs/git-work"
+version = "0.1.0"
+authors = ["mainrs <5113257+mainrs@users.noreply.github.com>"]
+edition = "2018"
+
+[dependencies]
+anyhow = "1.0.40"
+clap = "3.0.0-beta.2"
+clap_generate = "3.0.0-beta.2"
+git2 = { version = "0.13.20", default-features = false }
+heck = "0.3.2"
+
+[build-dependencies]
+anyhow = "1.0.40"
+heck = "0.3.2"
+quote = "1.0.9"
+serde = { version = "1.0.126", features = ["derive"] }
+serde_json = "1.0.64"
