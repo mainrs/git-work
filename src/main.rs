@@ -1,5 +1,5 @@
 use anyhow::Result;
-use clap::{App, AppSettings, Clap, IntoApp};
+use clap::{App, IntoApp, Parser};
 use clap_generate::generators::{Bash, Elvish, Fish, PowerShell, Zsh};
 use clap_generate::{generate, Generator};
 use heck::KebabCase;
@@ -7,15 +7,15 @@ use std::io;
 
 include!(concat!(env!("OUT_DIR"), "/subcommand.rs"));
 
-#[derive(Clap, Debug)]
-#[clap(author, setting(AppSettings::ColoredHelp), version)]
+#[derive(Parser, Debug)]
+#[clap(author, version)]
 struct Cli {
     #[clap(subcommand)]
     cmd: Option<SubCommand>,
 }
 
-#[derive(Clap, Debug)]
-#[clap(author, setting(AppSettings::ColoredHelp), version)]
+#[derive(Parser, Debug)]
+#[clap(author, version)]
 struct CommitTypeArgs {
     /// Force the creation of a branch even if it exists.
     #[clap(long)]
@@ -24,8 +24,8 @@ struct CommitTypeArgs {
     title: Vec<String>,
 }
 
-#[derive(Clap, Debug)]
-#[clap(author, setting(AppSettings::ColoredHelp), version)]
+#[derive(Parser, Debug)]
+#[clap(author, version)]
 struct CompletionsArgs {
     #[clap(possible_values(&[
         "bash",
@@ -37,8 +37,8 @@ struct CompletionsArgs {
     shell: String,
 }
 
-fn print_completions<G: Generator>(app: &mut App) {
-    generate::<G, _>(app, app.get_name().to_string(), &mut io::stdout());
+fn print_completions<G: Generator>(gen: G, app: &mut App) {
+    generate(gen, app, app.get_name().to_string(), &mut io::stdout());
 }
 
 macro_rules! gen_match {
@@ -47,11 +47,11 @@ macro_rules! gen_match {
             SubCommand::Completions(args) => {
                 let mut app = Cli::into_app();
                 match args.shell.as_ref() {
-                    "bash" => print_completions::<Bash>(&mut app),
-                    "elvish" => print_completions::<Elvish>(&mut app),
-                    "fish" => print_completions::<Fish>(&mut app),
-                    "powershell" => print_completions::<PowerShell>(&mut app),
-                    "zsh" => print_completions::<Zsh>(&mut app),
+                    "bash" => print_completions(Bash, &mut app),
+                    "elvish" => print_completions(Elvish, &mut app),
+                    "fish" => print_completions(Fish, &mut app),
+                    "powershell" => print_completions(PowerShell, &mut app),
+                    "zsh" => print_completions(Zsh, &mut app),
                     _ => panic!("Unknown generator"),
                 }
             }

@@ -33,7 +33,7 @@ fn main() -> Result<()> {
         .collect::<Vec<_>>();
 
     let module_to_write = quote! {
-        #[derive(Clap, Debug)]
+        #[derive(Debug, Parser)]
         enum SubCommand {
             /// Generate shell completion scripts for git-work.
             Completions(CompletionsArgs),
